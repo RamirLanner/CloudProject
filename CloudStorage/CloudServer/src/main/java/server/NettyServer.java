@@ -1,18 +1,20 @@
 package server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolver;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
-import java.nio.channels.SocketChannel;
-
 public class NettyServer {
+
+    private final int DEFAULT_PORT = 8189;
 
     public NettyServer() {
         EventLoopGroup auth = new NioEventLoopGroup(1);
@@ -22,25 +24,22 @@ public class NettyServer {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(auth, worker)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<io.netty.channel.socket.SocketChannel>() {
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        protected void initChannel(io.netty.channel.socket.SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(
-                                    new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-                                    new ObjectEncoder(),
-                                    new ChatUnitHandler());
+                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+//                            socketChannel.pipeline().addLast(
+//                                    new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+//                                    new ObjectEncoder(),
+//                                    new ChatUnitHandler());
                         }
                     });
-
+            ChannelFuture future = bootstrap.bind(DEFAULT_PORT).sync();
+            future.channel().closeFuture().sync();
         }catch (InterruptedException e){
-
+            e.printStackTrace();
         }finally {
             auth.shutdownGracefully();
             worker.shutdownGracefully();
         }
-
-
-
-
     }
 }
