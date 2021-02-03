@@ -46,7 +46,7 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command>{//
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Read compleate");
+        System.out.println("Read complete");
     }
 
     @Override
