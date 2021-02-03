@@ -1,0 +1,2 @@
+MyInformation
+Second String

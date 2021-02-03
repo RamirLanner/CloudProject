@@ -6,7 +6,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.stream.Collectors;
 
 public class PacketHandler extends SimpleChannelInboundHandler<Command>{//
     private static final ConcurrentLinkedDeque<ChannelHandlerContext> clients = new ConcurrentLinkedDeque<>();
@@ -19,12 +23,19 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command>{//
         cnt++;
         name = "Client "+ cnt;
         System.out.println("Клиентов "+cnt);
-        ctx.writeAndFlush("dfdf");
+        Path serverDir = Path.of("_ServerDir");
+        //Files.createDirectory(Path.of("TEstDir"));
+        System.out.println("Catalog is exist = " + Files.exists(serverDir));
+        String collect = Files.list(serverDir)
+                .map(path -> path.getFileName().toString())
+                .collect(Collectors.joining(System.lineSeparator()));
+        System.out.println(collect);
+        ctx.writeAndFlush(collect);
         //super.channelActive(ctx);
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Command com) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, Command com) throws Exception {
 
     }
 
@@ -44,10 +55,10 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command>{//
 //        System.out.println("hhh");
 //    }
 
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Read complete");
-    }
+//    @Override
+//    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+//        System.out.println("Read complete");
+//    }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
