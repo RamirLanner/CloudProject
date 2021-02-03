@@ -27,13 +27,14 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-//                            socketChannel.pipeline().addLast(
-//                                    new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-//                                    new ObjectEncoder(),
-//                                    new ChatUnitHandler());
+                            socketChannel.pipeline().addLast(
+                                    new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+                                    new ObjectEncoder(),
+                                    new PacketHandler());
                         }
                     });
             ChannelFuture future = bootstrap.bind(DEFAULT_PORT).sync();
+            System.out.println("Server started on port = 8189.");
             future.channel().closeFuture().sync();
         }catch (InterruptedException e){
             e.printStackTrace();
