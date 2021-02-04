@@ -1,3 +1,4 @@
+import commands.Command;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
@@ -23,7 +24,7 @@ public class Client {
                         in.close();
                     }
                     try {
-                        os.writeObject(str);
+                        os.writeObject(Command.authCommand());
                         os.flush();
                     } catch (Exception e) {
                         e.printStackTrace();

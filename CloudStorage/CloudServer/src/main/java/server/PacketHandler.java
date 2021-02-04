@@ -1,6 +1,7 @@
 package server;
 
 import commands.Command;
+import commands.CommandType;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -16,6 +17,8 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command>{//
     private static final ConcurrentLinkedDeque<ChannelHandlerContext> clients = new ConcurrentLinkedDeque<>();
     private  static int cnt =0;
     private String name;
+    private int clientID;
+    private boolean authStatus;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -36,6 +39,43 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command>{//
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Command com) throws Exception {
+        if (authStatus){
+            if (com.getType()== CommandType.AUTH){
+                //логика авторизации
+                name = "Client "+cnt;
+                clientID = 666+cnt;
+                System.out.println(name+" auth complete");
+                ctx.writeAndFlush(Command.authOkCommand());
+            }else {
+                ctx.writeAndFlush(Command.authErrorCommand());
+                ctx.writeAndFlush(Command.disconnectCommand());
+            }
+            return;
+        }
+
+        switch (com.getType()){
+            case CREATE_DIR:
+
+                break;
+            case AUTH_ERROR:
+
+                break;
+            case UPLOAD_FILE:
+
+                break;
+            case DOWNLOAD_FILE:
+
+                break;
+            case STATUS_COMMAND:
+
+                break;
+            case UPDATE_CATALOG_TREE:
+
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + com.getType());
+
+        }
 
     }
 

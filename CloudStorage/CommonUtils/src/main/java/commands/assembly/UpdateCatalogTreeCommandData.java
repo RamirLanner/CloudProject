@@ -1,4 +1,6 @@
 package commands.assembly;
 
-public class UpdateCatalogTreeCommandData {
+import java.io.Serializable;
+
+public class UpdateCatalogTreeCommandData implements Serializable {
 }

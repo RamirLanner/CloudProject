@@ -1,4 +1,6 @@
 package commands.assembly;
 
-public class UploadFileCommandData {
+import java.io.Serializable;
+
+public class UploadFileCommandData implements Serializable {
 }

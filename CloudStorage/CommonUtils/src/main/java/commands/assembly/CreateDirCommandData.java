@@ -1,4 +1,6 @@
 package commands.assembly;
 
-public class CreateDirCommandData {
+import java.io.Serializable;
+
+public class CreateDirCommandData implements Serializable {
 }

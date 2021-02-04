@@ -1,4 +1,6 @@
 package commands.assembly;
 
-public class StatusCommandData {
+import java.io.Serializable;
+
+public class StatusCommandData implements Serializable {
 }

@@ -1,4 +1,6 @@
 package commands.assembly;
 
-public class DisconnectCommandData {
+import java.io.Serializable;
+
+public class DisconnectCommandData implements Serializable {
 }

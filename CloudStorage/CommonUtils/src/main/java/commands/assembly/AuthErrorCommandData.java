@@ -1,4 +1,6 @@
 package commands.assembly;
 
-public class AuthErrorCommandData {
+import java.io.Serializable;
+
+public class AuthErrorCommandData implements Serializable {
 }

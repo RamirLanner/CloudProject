@@ -1,4 +1,6 @@
 package commands.assembly;
 
-public class AuthOkCommandData {
+import java.io.Serializable;
+
+public class AuthOkCommandData implements Serializable {
 }
