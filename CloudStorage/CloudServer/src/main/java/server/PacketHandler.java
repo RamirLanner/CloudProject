@@ -20,6 +20,7 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command>{//
     private int clientID;
     private boolean authStatus;
 
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         clients.add(ctx);

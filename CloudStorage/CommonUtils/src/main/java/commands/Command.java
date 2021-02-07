@@ -70,5 +70,11 @@ public class Command implements Serializable {
         command.data = new StatusCommandData();
         return command;
     }
+    public static Command packetCommand(){
+        Command command =new Command();
+        command.type = CommandType.PACKET;
+        command.data = new PacketCommandData();
+        return command;
+    }
 
 }

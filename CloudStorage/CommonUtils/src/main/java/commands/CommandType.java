@@ -10,6 +10,7 @@ public enum CommandType {
     UPLOAD_FILE,
     DOWNLOAD_FILE,
     CREATE_DIR,
+    PACKET,
 
     STATUS_COMMAND
 }

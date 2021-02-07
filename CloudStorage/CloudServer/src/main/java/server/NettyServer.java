@@ -1,5 +1,6 @@
 package server;
 
+import ServerUtil.auth.MSSqlAuthService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -41,6 +42,7 @@ public class NettyServer {
         }finally {
             auth.shutdownGracefully();
             worker.shutdownGracefully();
+            MSSqlAuthService.getInstance().stop();
         }
     }
 }
