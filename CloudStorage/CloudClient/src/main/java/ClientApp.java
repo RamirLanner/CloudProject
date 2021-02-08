@@ -3,6 +3,7 @@ import controller.MainViewController;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import model.NettyNetwork;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -58,57 +60,40 @@ public class ClientApp extends Application {
 //        FXMLLoader mainLoader = new FXMLLoader();
 //        mainLoader.setLocation(ClientApp.class.getResource("MainView.fxml"));
 //        Parent root = mainLoader.load();
-        Parent root = FXMLLoader.load(getClass().getResource("view/MainView.fxml"));
+
 
         //MainViewController controller = mainLoader.getController();
         //viewController = mainLoader.getController();
 
-        this.primaryStage = stage;
+        NettyNetwork network = new NettyNetwork("localhost", 8189);
+        Thread connectionThread = new Thread(() -> {
+            network.connect();
+        });
+        connectionThread.setDaemon(true);
+        connectionThread.start();
 
-        primaryStage.setScene(new Scene(root));//, 300, 275
-        primaryStage.setResizable(false);
+        Thread.sleep(5000);//тайминговая задержка на создание подключения и возврат статуса
+        if (network.isConnected()) {
+            Parent root = FXMLLoader.load(getClass().getResource("view/MainView.fxml"));
+            this.primaryStage = stage;
+            primaryStage.setScene(new Scene(root));//, 300, 275
+            primaryStage.setResizable(false);
+            primaryStage.setTitle("Cloud client");
 
-        primaryStage.show();
-        //MainViewController mainDialogController = mainLoader.getController();
+            Platform.runLater(() -> primaryStage.show());
+            //MainViewController mainDialogController = mainLoader.getController();
 
-        //authWindowStart(primaryStage);//вызываем авторизацию
-
-        //mainDialogController.setNetwork(network);
-        //primaryStage.setOnCloseRequest(event -> network.close());//при закрытии окна закрываем сокет
+            //authWindowStart(primaryStage);//вызываем авторизацию
+            //mainDialogController.setNetwork(network);
+            primaryStage.setOnCloseRequest(event -> {
+                network.close();
+            });//при закрытии окна закрываем сокет
+        }
+        else {
+            showErrorWindow("", "Ошибка подключения к серверу");
+        }
 
     }
-
-//    private void authWindowStart(Stage primaryStage) {
-//        try {
-////            network = new ClientNetwork();
-////            if (!network.connect()) {
-////                showErrorWindow("", "Ошибка подключения к серверу");
-////                return;
-////            }//попытка подключния к серверу, если не успешно, то программа дальше не работает
-//
-//            FXMLLoader authDialogLoader = new FXMLLoader();
-//            authDialogLoader.setLocation(ClientApp.class.getResource("views/AuthDialogView.fxml"));
-//            Parent authDialogPanel = authDialogLoader.load();
-//            authDialogStage = new Stage();
-//            authDialogStage.setResizable(false);
-//            authDialogStage.setTitle("Authorization");
-//            authDialogStage.initModality(Modality.WINDOW_MODAL);
-//            authDialogStage.initOwner(primaryStage);
-//            Scene scene = new Scene(authDialogPanel);
-//            authDialogStage.setScene(scene);
-//
-////            //передаем данные в контроллер
-////            AuthDialogControlleer authDialogControlleer = authDialogLoader.getController();
-////            authDialogControlleer.setNetwork(network);
-////            authDialogControlleer.setClientApp(this);
-//
-//            authDialogStage.show();
-//        } catch (IOException e) {
-//            showErrorWindow("Окно авторизации не загружено", "Ошибка загрузки");
-//            e.printStackTrace();
-//        }
-//
-//    }
 
     public static void main(String[] args) {
         launch(args);
