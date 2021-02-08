@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="520.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
    <children>
-      <Button layoutX="341.0" layoutY="133.0" minWidth="100.0" mnemonicParsing="false" text="download &gt;&gt;" />
+      <Button fx:id="dowloadButton" layoutX="341.0" layoutY="133.0" minWidth="100.0" mnemonicParsing="false" onAction="#downloadButtonHandler" text="download &gt;&gt;" />
       <Button layoutX="341.0" layoutY="170.0" minWidth="100.0" mnemonicParsing="false" text=" &lt;&lt; upload" />
       <Button fx:id="authButton" layoutX="337.0" layoutY="30.0" mnemonicParsing="false" text="Auth" />
       <TextField layoutX="14.0" layoutY="30.0" />

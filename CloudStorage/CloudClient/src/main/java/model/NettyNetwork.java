@@ -1,5 +1,6 @@
 package model;
 
+import controller.MainViewController;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -15,10 +16,22 @@ public class NettyNetwork {
     private String host;
     private int port;
     boolean connectedStatus;
+    private NettyNetwork net;
+    private MainViewController viewController;
+    private ClientHandler handler;
+
+    public ClientHandler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(ClientHandler handler) {
+        this.handler = handler;
+    }
 
     public NettyNetwork(String host, int port) {
         this.host = host;
         this.port = port;
+        this.net = this;
     }
 
     public boolean isConnected() {
@@ -38,7 +51,7 @@ public class NettyNetwork {
                             socketChannel.pipeline().addLast(
                                     new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
-                                    new ClientHandler());
+                                    new ClientHandler(net));
                         }
                     });
             // Start the client
@@ -70,4 +83,11 @@ public class NettyNetwork {
         }
     }
 
+    public void setViewController(MainViewController viewController) {
+        this.viewController = viewController;
+    }
+
+    public MainViewController getViewController() {
+        return viewController;
+    }
 }
