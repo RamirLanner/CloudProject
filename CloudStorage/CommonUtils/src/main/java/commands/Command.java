@@ -16,10 +16,10 @@ public class Command implements Serializable {
         return data;
     }
 
-    public static Command authCommand(){
+    public static Command authCommand(String login, String password){
         Command command =new Command();
         command.type = CommandType.AUTH;
-        command.data = new AuthCommandData();
+        command.data = new AuthCommandData(login, password);
         return command;
     }
     public static Command authErrorCommand(){
@@ -28,10 +28,10 @@ public class Command implements Serializable {
         command.data = new AuthErrorCommandData();
         return command;
     }
-    public static Command authOkCommand(){
+    public static Command authOkCommand(String userName){
         Command command =new Command();
         command.type = CommandType.AUTH_OK;
-        command.data = new AuthOkCommandData();
+        command.data = new AuthOkCommandData(userName);
         return command;
     }
     public static Command createDirCommand(){
@@ -61,7 +61,7 @@ public class Command implements Serializable {
     public static Command updateCatalogTreeCommand(){
         Command command =new Command();
         command.type = CommandType.UPDATE_CATALOG_TREE;
-        command.data = new AuthCommandData();
+        command.data = new UpdateCatalogTreeCommandData();
         return command;
     }
     public static Command statusCommand(){

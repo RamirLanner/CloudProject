@@ -1,6 +1,7 @@
 package model;
 
 import commands.Command;
+import commands.assembly.AuthOkCommandData;
 import controller.MainViewController;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,6 +26,16 @@ public class ClientHandler extends SimpleChannelInboundHandler<Command> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Command command) throws Exception {
+        switch (command.getType()){
+            case AUTH_OK:
+                AuthOkCommandData data = (AuthOkCommandData) command.getData();
+                System.out.println(data.getUserName());
+                viewController.setUsernameLabel(data.getUserName());
+                break;
+            case AUTH_ERROR:
+                viewController.setStatusLabel("Auth ERROR! Try again!");
+                break;
+        }
 
     }
 
@@ -34,5 +45,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<Command> {
 
     public void setViewController(MainViewController viewController) {
         this.viewController = viewController;
+    }
+
+    public void sendMessageToServer(Command command){
+        user.writeAndFlush(command);
     }
 }

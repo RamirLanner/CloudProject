@@ -31,14 +31,14 @@ public class ClientApp extends Application {
             primaryStage.setScene(new Scene(root));//, 300, 275
             primaryStage.setResizable(false);
             primaryStage.setTitle("Cloud client");
+            //траблы с передачей комманд от хэндлера контроллеру и обратно, все объединил через нетворк.
+            //это единственное что мне пришло в голову в час ночи
             network.setViewController(viewController);
             network.getHandler().setViewController(viewController);
+            viewController.setHandler(network.getHandler());
 
             Platform.runLater(() -> primaryStage.show());
 
-
-            //authWindowStart(primaryStage);//вызываем авторизацию
-            //mainDialogController.setNetwork(network);
             primaryStage.setOnCloseRequest(event -> {
                 network.close();
             });//при закрытии окна закрываем сокет

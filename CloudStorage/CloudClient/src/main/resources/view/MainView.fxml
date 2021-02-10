@@ -6,16 +6,19 @@
 
 <AnchorPane prefHeight="520.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
    <children>
-      <Button fx:id="dowloadButton" layoutX="341.0" layoutY="133.0" minWidth="100.0" mnemonicParsing="false" onAction="#downloadButtonHandler" text="download &gt;&gt;" />
+      <Button fx:id="downloadButton" layoutX="341.0" layoutY="133.0" minWidth="100.0" mnemonicParsing="false" onAction="#downloadButtonHandler" text="download &gt;&gt;" />
       <Button layoutX="341.0" layoutY="170.0" minWidth="100.0" mnemonicParsing="false" text=" &lt;&lt; upload" />
-      <Button fx:id="authButton" layoutX="337.0" layoutY="30.0" mnemonicParsing="false" text="Auth" />
-      <TextField layoutX="14.0" layoutY="30.0" />
-      <PasswordField layoutX="175.0" layoutY="30.0" />
+      <Button fx:id="authButton" layoutX="337.0" layoutY="30.0" mnemonicParsing="false" onAction="#authButtonHandler" text="Auth" />
+      <TextField fx:id="loginTextField" layoutX="14.0" layoutY="30.0" />
+      <PasswordField fx:id="passwordTextField" layoutX="175.0" layoutY="30.0" />
       <Label layoutX="14.0" layoutY="13.0" text="Login" />
       <Label layoutX="175.0" layoutY="13.0" text="Password" />
       <TreeView layoutX="14.0" layoutY="88.0" prefHeight="320.0" prefWidth="300.0" />
-      <TreeView layoutX="461.0" layoutY="88.0" prefHeight="320.0" prefWidth="300.0" />
-      <Label layoutX="14.0" layoutY="456.0" prefHeight="52.0" prefWidth="569.0" text="Status" />
+      <TreeView fx:id="userThreeView" layoutX="461.0" layoutY="88.0" prefHeight="320.0" prefWidth="300.0" />
+      <Label fx:id="statusLabel" layoutX="14.0" layoutY="456.0" prefHeight="52.0" prefWidth="752.0" text="Status">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
       <Label layoutX="15.0" layoutY="65.0" text="SERVER CLOUD">
          <font>
             <Font size="14.0" />
@@ -29,5 +32,9 @@
       <Button layoutX="341.0" layoutY="88.0" minWidth="100.0" mnemonicParsing="false" text="Refresh" />
       <Button layoutX="15.0" layoutY="420.0" minWidth="100.0" mnemonicParsing="false" text="make dir (S)" />
       <Button layoutX="461.0" layoutY="420.0" minWidth="100.0" mnemonicParsing="false" text="make dir (L)" />
+      <Label fx:id="usernameLabel" layoutX="449.0" layoutY="29.0" text="Please log in to the server!">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
    </children>
 </AnchorPane>
