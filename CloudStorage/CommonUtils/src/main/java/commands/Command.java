@@ -52,10 +52,10 @@ public class Command implements Serializable {
         command.data = new DownloadFileCommandData();
         return command;
     }
-    public static Command uploadFileCommand(){
+    public static Command uploadFileCommand(String filename, String filepath, boolean end, int offset, int len, byte[] buff){
         Command command =new Command();
         command.type = CommandType.UPLOAD_FILE;
-        command.data = new UploadFileCommandData();
+        command.data = new UploadFileCommandData( filename,  filepath,  end,  offset, len, buff);
         return command;
     }
     public static Command updateCatalogTreeCommand(){
@@ -64,10 +64,10 @@ public class Command implements Serializable {
         command.data = new UpdateCatalogTreeCommandData();
         return command;
     }
-    public static Command statusCommand(){
+    public static Command statusCommand(String sts){
         Command command =new Command();
         command.type = CommandType.STATUS_COMMAND;
-        command.data = new StatusCommandData();
+        command.data = new StatusCommandData(sts);
         return command;
     }
     public static Command packetCommand(){

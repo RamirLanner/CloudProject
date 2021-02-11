@@ -5,13 +5,17 @@ import UserData.User;
 import commands.Command;
 import commands.CommandType;
 import commands.assembly.AuthCommandData;
+import commands.assembly.UploadFileCommandData;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
@@ -19,10 +23,9 @@ import java.util.stream.Collectors;
 public class PacketHandler extends SimpleChannelInboundHandler<Command> {//
     private static final ConcurrentLinkedDeque<ChannelHandlerContext> clients = new ConcurrentLinkedDeque<>();
     private static int cnt = 0;
-    private String name;
-    private int clientID;
     private boolean authStatus;
     ChannelHandlerContext userCTX;
+    Path defUserPath;
 
 
     @Override
@@ -31,15 +34,15 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command> {//
         cnt++;
         userCTX = ctx;
 
-        name = "Client " + cnt;
-        System.out.println("Клиентов " + cnt);
-        Path serverDir = Path.of("_ServerDir");
-        //Files.createDirectory(Path.of("TEstDir"));
-        System.out.println("Catalog is exist = " + Files.exists(serverDir));
-        String collect = Files.list(serverDir)
-                .map(path -> path.getFileName().toString())
-                .collect(Collectors.joining(System.lineSeparator()));
-        System.out.println(collect);
+//        name = "Client " + cnt;
+//        System.out.println("Клиентов " + cnt);
+//        Path serverDir = Path.of("_ServerDir");
+//        //Files.createDirectory(Path.of("TEstDir"));
+//        System.out.println("Catalog is exist = " + Files.exists(serverDir));
+//        String collect = Files.list(serverDir)
+//                .map(path -> path.getFileName().toString())
+//                .collect(Collectors.joining(System.lineSeparator()));
+//        System.out.println(collect);
         //ctx.writeAndFlush(collect);
         //super.channelActive(ctx);
     }
@@ -54,12 +57,12 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command> {//
                             .getUserByLoginAndPassword(data.getLogin(), data.getPassword());
                     if (user != null) {
                         userCTX.writeAndFlush(Command.authOkCommand(user.getUsername()));
+                        userDir(user.getLogin());
                         authStatus = true;
+                    }else {
+                        userCTX.writeAndFlush(Command.authErrorCommand());
                     }
-                    userCTX.writeAndFlush(Command.authErrorCommand());
                 }
-            } else {
-                return;
             }
         } else {
             switch (com.getType()) {
@@ -67,10 +70,10 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command> {//
 
                     break;
                 case AUTH_ERROR:
-
+                    //ff
                     break;
                 case UPLOAD_FILE:
-
+                    fileReceiveAndWrite(com, ctx);
                     break;
                 case DOWNLOAD_FILE:
 
@@ -88,6 +91,22 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command> {//
         }
     }
 
+    private void fileReceiveAndWrite(Command com, ChannelHandlerContext ctx){
+        UploadFileCommandData data = (UploadFileCommandData) com.getData();
+        try {
+            Path path =Path.of(data.getFilepath(), data.getFilename());
+            RandomAccessFile file =new RandomAccessFile(path.toString(),"rw");
+            file.write(data.getBuff(),data.getOffset(),data.getLen());
+            file.close();
+        } catch (IOException e){
+            ctx.writeAndFlush(Command.statusCommand("The file is not uploaded"));
+            System.out.println("fuck");
+            e.printStackTrace();
+        }
+        if (data.isEnd()){
+            ctx.writeAndFlush(Command.statusCommand("The file is uploaded"));
+        }
+    }
 
 //    @Override
 //    public void channelRead(ChannelHandlerContext ctx, Object o) throws Exception {
@@ -117,4 +136,12 @@ public class PacketHandler extends SimpleChannelInboundHandler<Command> {//
             clients.remove(ctx);
             //super.channelInactive(ctx);
         }
+
+        private void userDir(String userLogin) throws IOException {
+            defUserPath = Path.of("_ServerDir",userLogin);
+            if(!Files.exists(defUserPath)){
+                Files.createDirectory(defUserPath);
+            }
+        }
+
     }

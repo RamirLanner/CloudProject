@@ -31,9 +31,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<Command> {
                 AuthOkCommandData data = (AuthOkCommandData) command.getData();
                 System.out.println(data.getUserName());
                 viewController.setUsernameLabel(data.getUserName());
+                System.out.println("auth ok");
                 break;
             case AUTH_ERROR:
                 viewController.setStatusLabel("Auth ERROR! Try again!");
+                System.out.println("auth error");
                 break;
         }
 
